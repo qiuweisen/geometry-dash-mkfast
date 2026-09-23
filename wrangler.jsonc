@@ -1,0 +1,213 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "chartmini-v2",
+  "account_id": "7135c35904ce735df4e1326f317e373d",
+  "compatibility_date": "2025-09-02",
+  "compatibility_flags": [
+    // Enable Node.js API
+    // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#nodejs-compatibility-flag
+    "nodejs_compat",
+    // This also enables nodejs_compat_v2 as long as compatibility date is 2024-09-23 or later.
+    // https://developers.cloudflare.com/workers/configuration/compatibility-dates/#nodejs-compatibility-flag
+    // Enable improved Node.js API with polyfills and native code
+    // https://blog.cloudflare.com/zh-cn/more-npm-packages-on-cloudflare-workers-combining-polyfills-and-native-code/
+    // "nodejs_compat_v2",
+    // Enable auto-populating process.env
+    // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#enable-auto-populating-processenv
+    "nodejs_compat_populate_process_env",
+    // Allow to fetch URLs in your app
+    // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#global-fetch-strictly-public
+    "global_fetch_strictly_public"
+  ],
+
+  // Do not let the platform-level Worker cache answer before the request
+  // reaches the current version. Public HTML still uses the explicit
+  // Cache API below and static client assets remain asset-cached, while this
+  // prevents a superseded extensionless document from winning over the
+  // locale-aware Worker routing.
+  "cache": {
+    "enabled": false
+  },
+
+  // https://developers.cloudflare.com/workers/wrangler/configuration
+  // The path to the entrypoint of your Worker that will be executed
+  "main": "./src/server.ts",
+
+  // Keep long-form translated marketing content as CDN-served static assets.
+  // The ASSETS binding lets server functions read the requested locale without
+  // bundling all 40 translations into the Worker script.
+  "assets": {
+    "binding": "ASSETS",
+    // Every localized SEO page is an independent document. Route all locale
+    // prefixes through the Worker first so the current version can fetch the
+    // matching exact asset instead of inheriting an old CDN fallback document.
+    "run_worker_first": [
+      "/zh-hans",
+      "/zh-hans/*",
+      "/es-419",
+      "/es-419/*",
+      "/pt",
+      "/pt/*",
+      "/fr",
+      "/fr/*",
+      "/de",
+      "/de/*",
+      "/ru",
+      "/ru/*",
+      "/ja",
+      "/ja/*",
+      "/ko",
+      "/ko/*",
+      "/zh-hant",
+      "/zh-hant/*",
+      "/ar",
+      "/ar/*",
+      "/it",
+      "/it/*",
+      "/nl",
+      "/nl/*",
+      "/pl",
+      "/pl/*",
+      "/tr",
+      "/tr/*",
+      "/vi",
+      "/vi/*",
+      "/th",
+      "/th/*",
+      "/id",
+      "/id/*",
+      "/hi",
+      "/hi/*",
+      "/he",
+      "/he/*",
+      "/fa",
+      "/fa/*",
+      "/uk",
+      "/uk/*",
+      "/cs",
+      "/cs/*",
+      "/sv",
+      "/sv/*",
+      "/no",
+      "/no/*",
+      "/da",
+      "/da/*",
+      "/fi",
+      "/fi/*",
+      "/el",
+      "/el/*",
+      "/ro",
+      "/ro/*",
+      "/hu",
+      "/hu/*",
+      "/bg",
+      "/bg/*",
+      "/sk",
+      "/sk/*",
+      "/sl",
+      "/sl/*",
+      "/sr",
+      "/sr/*",
+      "/ms",
+      "/ms/*",
+      "/bn",
+      "/bn/*",
+      "/ur",
+      "/ur/*",
+      "/ta",
+      "/ta/*",
+      "/te",
+      "/te/*"
+    ],
+    // A missing document must reach the Worker/404 path, never silently
+    // become the English SPA shell. This prevents incorrect 200/canonical
+    // responses from entering search-engine caches.
+    "not_found_handling": "none"
+  },
+
+  // Logpush is not enabled on this account; keep observability logs enabled below.
+  "logpush": false,
+
+  // Whether Wrangler should keep variables configured in the dashboard on deploy
+  "keep_vars": true,
+
+  // Enables automatically ingest, store, filter, and analyze logging data emitted from Cloudflare Workers
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": true,
+      "persist": true,
+      "head_sampling_rate": 1
+    }
+  },
+
+  // Pin the production analysis model explicitly; API keys remain secrets.
+  "vars": {
+    "GEMINI_API_MODEL": "gemma-4-31b-it"
+  },
+
+  // Route production traffic through the Worker while the existing Cloudflare
+  // DNS record remains the hostname entry point.
+  "routes": [
+    {
+      "pattern": "chartmini.com/*",
+      "zone_name": "chartmini.com"
+    }
+  ],
+
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "GEMINI_KEY_POOL",
+        "class_name": "GeminiKeyPool"
+      }
+    ]
+  },
+
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["GeminiKeyPool"]
+    }
+  ],
+
+  /**
+   * Bindings
+   * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
+   * databases, object storage, AI inference, real-time communication and more.
+   * https://developers.cloudflare.com/workers/runtime-apis/bindings/
+   */
+  /**
+   * Isolated v2 D1 database. This is disposable test data and is not production.
+   */
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "chartmini-v2",
+      "database_id": "a35cdf83-65c8-4427-b2f9-ef7780c1144b",
+      "migrations_dir": "./src/db/migrations"
+    }
+  ],
+  /**
+   * Isolated v2 user-file bucket. Market data remains outside this bucket.
+   */
+  "r2_buckets": [
+    {
+      "bucket_name": "chartmini-v2-files",
+      "binding": "BUCKET"
+    }
+  ],
+  /**
+   * KV: server-side cache.
+   * Isolated v2 cache namespace.
+   */
+  "kv_namespaces": [
+    {
+      "binding": "CACHE",
+      "id": "fbdd07934bab44b6b7d356587653b796"
+    }
+  ]
+}

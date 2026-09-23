@@ -1,0 +1,57 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+count.txt
+.env
+.env.local
+.env.production
+.dev.vars
+.migration-source-export.json
+.migration-d1-import.sql
+.migration-d1-chunks/
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+.content-collections
+public/marketing-content/
+__unconfig*
+todos.json
+/tmp/
+
+# locale
+project.inlang/cache
+src/locale/paraglide
+
+# claude code
+.claude
+
+# codebuddy
+.codebuddy
+
+# conductor
+.conductor
+
+# kiro
+.kiro
+
+# Auto Claude data directory
+.auto-claude/
+
+# Auto Claude generated files
+.auto-claude-security.json
+.auto-claude-status
+.claude_settings.json
+.worktrees/
+.security-key
+logs/security/
+
+# Firecrawl research cache
+.firecrawl/
+
+# Playwright
+playwright-report
+test-results

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Play Geometry Dash</title>
+  <desc id="desc">A cyan geometric cube jumping over a coral spike</desc>
+  <rect width="256" height="256" rx="48" fill="#07133d"/>
+  <path d="M22 181h95v13H22zM137 181h97v13h-97z" fill="#19e5ef"/>
+  <path d="M117 194h22v18h-22z" fill="#19e5ef"/>
+  <path d="M158 194h40v-13h-40z" fill="#19e5ef"/>
+  <path d="m177 113 24 42h-48z" fill="#ffcf2e"/>
+  <path d="m177 123 15 27h-30z" fill="#ff655c"/>
+  <path d="m84 105 39-42 58 31-38 54z" fill="#16dce9" stroke="#6af5f5" stroke-width="7" stroke-linejoin="round"/>
+  <path d="m95 103 31-33 42 23-31 43z" fill="#1484e8" opacity=".9"/>
+  <path d="m130 83 17 9-9 11-17-9zM157 98l17 9-9 11-17-9z" fill="#07133d"/>
+  <path d="m76 119-36 26 30-39zM83 140l-47 33 39-44zM91 158l-35 24 26-34z" fill="#16a9ed"/>
+</svg>

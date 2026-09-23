@@ -1,0 +1,255 @@
+/**
+ * Application database schema (non-auth tables).
+ * Add your app tables here; keep Better Auth tables in auth.schema.ts.
+ */
+
+import { relations } from 'drizzle-orm';
+import {
+  integer,
+  primaryKey,
+  sqliteTable,
+  text,
+  index,
+  uniqueIndex,
+} from 'drizzle-orm/sqlite-core';
+import { user } from './auth.schema';
+import type { PaymentScene, PaymentStatus, PaymentType, PlanInterval } from '@/payment/types';
+
+/** 
+ * Payment: subscription and one-time 
+ */
+export const payment = sqliteTable(
+  'payment',
+  {
+    id: text('id').primaryKey(),
+    priceId: text('price_id').notNull(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    customerId: text('customer_id').notNull(),
+    subscriptionId: text('subscription_id'),
+    sessionId: text('session_id'),
+    invoiceId: text('invoice_id').unique(),
+    type: text('type').notNull().$type<PaymentType>(), // 'subscription' | 'one_time'
+    scene: text('scene').$type<PaymentScene>(), // 'subscription' | 'lifetime'
+    interval: text('interval').$type<PlanInterval>(), // 'month' | 'year'
+    status: text('status').notNull().$type<PaymentStatus>(),
+    paid: integer('paid', { mode: 'boolean' }).notNull().default(false),
+    periodStart: integer('period_start', { mode: 'timestamp_ms' }),
+    periodEnd: integer('period_end', { mode: 'timestamp_ms' }),
+    cancelAtPeriodEnd: integer('cancel_at_period_end', { mode: 'boolean' }),
+    trialStart: integer('trial_start', { mode: 'timestamp_ms' }),
+    trialEnd: integer('trial_end', { mode: 'timestamp_ms' }),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [
+    index('payment_user_id_idx').on(table.userId),
+    index('payment_customer_id_idx').on(table.customerId),
+    index('payment_subscription_id_idx').on(table.subscriptionId),
+    index('payment_session_id_idx').on(table.sessionId),
+    index('payment_invoice_id_idx').on(table.invoiceId),
+    index('payment_paid_idx').on(table.paid),
+    index('payment_user_paid_idx').on(table.userId, table.paid),
+  ]
+);
+
+export const paymentRelations = relations(payment, ({ one }) => ({
+  user: one(user, { fields: [payment.userId], references: [user.id] }),
+}));
+
+/**
+ * User files
+ * metadata for files uploaded to R2 (path userfiles/{userId}/xxx);
+ * filename = stored name on R2 (e.g. uuid.ext);
+ * originalName = user's file name.
+ */
+export const userFiles = sqliteTable(
+  'user_files',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    filename: text('filename').notNull(),
+    originalName: text('original_name').notNull(),
+    contentType: text('content_type').notNull(),
+    size: integer('size').notNull(),
+    r2Key: text('r2_key').notNull(),
+    isPublic: integer('is_public', { mode: 'boolean' }),
+    description: text('description'),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [
+    index('user_files_user_id_idx').on(table.userId),
+    index('user_files_r2_key_idx').on(table.r2Key),
+  ]
+);
+
+export const userFilesRelations = relations(userFiles, ({ one }) => ({
+  user: one(user, {
+    fields: [userFiles.userId],
+    references: [user.id],
+  }),
+}));
+
+/**
+ * Compact, cross-page TradingView indicator profile.
+ *
+ * Full chart layouts remain in each page's localStorage. This table stores
+ * only the official TradingView study template shared by the simulators.
+ */
+export const userIndicatorProfiles = sqliteTable(
+  'user_indicator_profiles',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    scope: text('scope').notNull().$type<'shared'>(),
+    templateJson: text('template_json').notNull(),
+    templateHash: text('template_hash').notNull(),
+    version: integer('version').notNull().default(1),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.scope] })]
+);
+
+export const userIndicatorProfilesRelations = relations(
+  userIndicatorProfiles,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [userIndicatorProfiles.userId],
+      references: [user.id],
+    }),
+  })
+);
+
+/**
+ * Lightweight record for a completed simulator session.
+ *
+ * Candles, TradingView state, and individual trade details stay client-side.
+ * Only the summary needed by the dashboard is stored in D1.
+ */
+export const trainingRecords = sqliteTable(
+  'training_records',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    mode: text('mode').notNull().$type<'play' | 'day-trading-simulator'>(),
+    symbol: text('symbol').notNull(),
+    interval: text('interval').notNull(),
+    bars: integer('bars').notNull().default(0),
+    tradeCount: integer('trade_count').notNull().default(0),
+    pnlBps: integer('pnl_bps').notNull().default(0),
+    durationSeconds: integer('duration_seconds').notNull().default(0),
+    startedAt: integer('started_at', { mode: 'timestamp_ms' }),
+    completedAt: integer('completed_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [
+    index('training_records_user_completed_idx').on(
+      table.userId,
+      table.completedAt
+    ),
+  ]
+);
+
+export const trainingRecordsRelations = relations(
+  trainingRecords,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [trainingRecords.userId],
+      references: [user.id],
+    }),
+  })
+);
+
+/**
+ * One daily check-in per user. A composite key makes repeated clicks,
+ * refreshes, and multiple tabs unable to award the daily points twice.
+ */
+export const dailyCheckins = sqliteTable(
+  'daily_checkins',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    dayKey: text('day_key').notNull(),
+    monthKey: text('month_key').notNull(),
+    basePoints: integer('base_points').notNull().default(5),
+    bonusPoints: integer('bonus_points').notNull().default(0),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.userId, table.dayKey] }),
+    index('daily_checkins_user_month_idx').on(table.userId, table.monthKey),
+  ]
+);
+
+export const dailyCheckinsRelations = relations(dailyCheckins, ({ one }) => ({
+  user: one(user, {
+    fields: [dailyCheckins.userId],
+    references: [user.id],
+  }),
+}));
+
+/**
+ * One-row points summary. Detailed point events are intentionally deferred
+ * until a future points marketplace needs a full ledger.
+ */
+export const userPoints = sqliteTable('user_points', {
+  userId: text('user_id')
+    .primaryKey()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  balance: integer('balance').notNull().default(0),
+  lifetimeEarned: integer('lifetime_earned').notNull().default(0),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+});
+
+export const userPointsRelations = relations(userPoints, ({ one }) => ({
+  user: one(user, {
+    fields: [userPoints.userId],
+    references: [user.id],
+  }),
+}));
+
+/**
+ * Legacy daily AI-analysis quota counters.
+ *
+ * `day` is stored as a millisecond timestamp, matching the other Drizzle
+ * timestamp columns and the source Prisma DateTime representation.
+ */
+export const aiAnalysisDailyUsage = sqliteTable(
+  'ai_analysis_daily_usage',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    day: integer('day', { mode: 'timestamp_ms' }).notNull(),
+    count: integer('count').notNull().default(0),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [
+    index('ai_analysis_daily_usage_user_id_idx').on(table.userId),
+    index('ai_analysis_daily_usage_day_idx').on(table.day),
+    index('ai_analysis_daily_usage_user_day_idx').on(table.userId, table.day),
+    uniqueIndex('ai_analysis_daily_usage_user_day_unique').on(
+      table.userId,
+      table.day
+    ),
+  ]
+);
+
+export const aiAnalysisDailyUsageRelations = relations(
+  aiAnalysisDailyUsage,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [aiAnalysisDailyUsage.userId],
+      references: [user.id],
+    }),
+  })
+);
