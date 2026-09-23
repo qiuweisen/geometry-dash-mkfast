@@ -22,7 +22,7 @@ export default function CallToActionSection() {
                 </p>
               </div>
               <Link
-                to="/play"
+                to="/game/geometry-dash-lite"
                 className={cn(
                   buttonVariants({ variant: 'secondary', size: 'lg' }),
                   'shrink-0 gap-2'

@@ -20,7 +20,6 @@ export function getFooterLinks(): MenuItemConfig[] {
     {
       title: m.footer_content(),
       items: [
-        { title: m.footer_blog(), href: '/blog', baseLocaleOnly: true },
         { title: m.footer_about(), href: '/about', baseLocaleOnly: true },
         { title: m.footer_contact(), href: '/contact', baseLocaleOnly: true },
       ],
