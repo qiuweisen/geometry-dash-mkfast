@@ -16,6 +16,7 @@ import { Route as CryptoTradingSimulatorRouteImport } from './routes/crypto-trad
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DayTradingSimulatorRouteImport } from './routes/day-trading-simulator'
 import { Route as ForexTradingSimulatorRouteImport } from './routes/forex-trading-simulator'
+import { Route as HowToPlayGeometryDashLiteRouteImport } from './routes/how-to-play-geometry-dash-lite'
 import { Route as IntradayTradingPracticeRouteImport } from './routes/intraday-trading-practice'
 import { Route as LanguagesRouteImport } from './routes/languages'
 import { Route as ManifestDotjsonRouteImport } from './routes/manifest[.]json'
@@ -52,6 +53,7 @@ import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-passw
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as GameGeometryDashLiteRouteImport } from './routes/game/geometry-dash-lite'
 import { Route as GoSlugRouteImport } from './routes/go/$slug'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsApikeysRouteImport } from './routes/settings/apikeys'
@@ -105,6 +107,12 @@ const ForexTradingSimulatorRoute = ForexTradingSimulatorRouteImport.update({
   path: '/forex-trading-simulator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HowToPlayGeometryDashLiteRoute =
+  HowToPlayGeometryDashLiteRouteImport.update({
+    id: '/how-to-play-geometry-dash-lite',
+    path: '/how-to-play-geometry-dash-lite',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const IntradayTradingPracticeRoute = IntradayTradingPracticeRouteImport.update({
   id: '/intraday-trading-practice',
   path: '/intraday-trading-practice',
@@ -285,6 +293,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const GameGeometryDashLiteRoute = GameGeometryDashLiteRouteImport.update({
+  id: '/game/geometry-dash-lite',
+  path: '/game/geometry-dash-lite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GoSlugRoute = GoSlugRouteImport.update({
   id: '/go/$slug',
   path: '/go/$slug',
@@ -379,6 +392,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/day-trading-simulator': typeof DayTradingSimulatorRoute
   '/forex-trading-simulator': typeof ForexTradingSimulatorRoute
+  '/how-to-play-geometry-dash-lite': typeof HowToPlayGeometryDashLiteRoute
   '/intraday-trading-practice': typeof IntradayTradingPracticeRoute
   '/languages': typeof LanguagesRoute
   '/manifest.json': typeof ManifestDotjsonRoute
@@ -412,6 +426,7 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/game/geometry-dash-lite': typeof GameGeometryDashLiteRoute
   '/go/$slug': typeof GoSlugRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
@@ -439,6 +454,7 @@ export interface FileRoutesByTo {
   '/crypto-trading-simulator': typeof CryptoTradingSimulatorRoute
   '/day-trading-simulator': typeof DayTradingSimulatorRoute
   '/forex-trading-simulator': typeof ForexTradingSimulatorRoute
+  '/how-to-play-geometry-dash-lite': typeof HowToPlayGeometryDashLiteRoute
   '/intraday-trading-practice': typeof IntradayTradingPracticeRoute
   '/languages': typeof LanguagesRoute
   '/manifest.json': typeof ManifestDotjsonRoute
@@ -471,6 +487,7 @@ export interface FileRoutesByTo {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/game/geometry-dash-lite': typeof GameGeometryDashLiteRoute
   '/go/$slug': typeof GoSlugRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
@@ -501,6 +518,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/day-trading-simulator': typeof DayTradingSimulatorRoute
   '/forex-trading-simulator': typeof ForexTradingSimulatorRoute
+  '/how-to-play-geometry-dash-lite': typeof HowToPlayGeometryDashLiteRoute
   '/intraday-trading-practice': typeof IntradayTradingPracticeRoute
   '/languages': typeof LanguagesRoute
   '/manifest.json': typeof ManifestDotjsonRoute
@@ -534,6 +552,7 @@ export interface FileRoutesById {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/game/geometry-dash-lite': typeof GameGeometryDashLiteRoute
   '/go/$slug': typeof GoSlugRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
@@ -565,6 +584,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/day-trading-simulator'
     | '/forex-trading-simulator'
+    | '/how-to-play-geometry-dash-lite'
     | '/intraday-trading-practice'
     | '/languages'
     | '/manifest.json'
@@ -598,6 +618,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset-password'
     | '/blog/$slug'
+    | '/game/geometry-dash-lite'
     | '/go/$slug'
     | '/settings/apikeys'
     | '/settings/billing'
@@ -625,6 +646,7 @@ export interface FileRouteTypes {
     | '/crypto-trading-simulator'
     | '/day-trading-simulator'
     | '/forex-trading-simulator'
+    | '/how-to-play-geometry-dash-lite'
     | '/intraday-trading-practice'
     | '/languages'
     | '/manifest.json'
@@ -657,6 +679,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset-password'
     | '/blog/$slug'
+    | '/game/geometry-dash-lite'
     | '/go/$slug'
     | '/settings/apikeys'
     | '/settings/billing'
@@ -686,6 +709,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/day-trading-simulator'
     | '/forex-trading-simulator'
+    | '/how-to-play-geometry-dash-lite'
     | '/intraday-trading-practice'
     | '/languages'
     | '/manifest.json'
@@ -719,6 +743,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset-password'
     | '/blog/$slug'
+    | '/game/geometry-dash-lite'
     | '/go/$slug'
     | '/settings/apikeys'
     | '/settings/billing'
@@ -749,6 +774,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   DayTradingSimulatorRoute: typeof DayTradingSimulatorRoute
   ForexTradingSimulatorRoute: typeof ForexTradingSimulatorRoute
+  HowToPlayGeometryDashLiteRoute: typeof HowToPlayGeometryDashLiteRoute
   IntradayTradingPracticeRoute: typeof IntradayTradingPracticeRoute
   LanguagesRoute: typeof LanguagesRoute
   ManifestDotjsonRoute: typeof ManifestDotjsonRoute
@@ -776,6 +802,7 @@ export interface RootRouteChildren {
   ApiChartSettingsRoute: typeof ApiChartSettingsRoute
   ApiPingRoute: typeof ApiPingRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  GameGeometryDashLiteRoute: typeof GameGeometryDashLiteRoute
   GoSlugRoute: typeof GoSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -837,6 +864,13 @@ declare module '@tanstack/react-router' {
       path: '/forex-trading-simulator'
       fullPath: '/forex-trading-simulator'
       preLoaderRoute: typeof ForexTradingSimulatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-to-play-geometry-dash-lite': {
+      id: '/how-to-play-geometry-dash-lite'
+      path: '/how-to-play-geometry-dash-lite'
+      fullPath: '/how-to-play-geometry-dash-lite'
+      preLoaderRoute: typeof HowToPlayGeometryDashLiteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/intraday-trading-practice': {
@@ -1091,6 +1125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/game/geometry-dash-lite': {
+      id: '/game/geometry-dash-lite'
+      path: '/game/geometry-dash-lite'
+      fullPath: '/game/geometry-dash-lite'
+      preLoaderRoute: typeof GameGeometryDashLiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/go/$slug': {
       id: '/go/$slug'
       path: '/go/$slug'
@@ -1289,6 +1330,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   DayTradingSimulatorRoute: DayTradingSimulatorRoute,
   ForexTradingSimulatorRoute: ForexTradingSimulatorRoute,
+  HowToPlayGeometryDashLiteRoute: HowToPlayGeometryDashLiteRoute,
   IntradayTradingPracticeRoute: IntradayTradingPracticeRoute,
   LanguagesRoute: LanguagesRoute,
   ManifestDotjsonRoute: ManifestDotjsonRoute,
@@ -1316,6 +1358,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChartSettingsRoute: ApiChartSettingsRoute,
   ApiPingRoute: ApiPingRoute,
   BlogSlugRoute: BlogSlugRoute,
+  GameGeometryDashLiteRoute: GameGeometryDashLiteRoute,
   GoSlugRoute: GoSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

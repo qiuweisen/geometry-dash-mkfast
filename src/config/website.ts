@@ -48,9 +48,9 @@ export const websiteConfig: WebsiteConfig = {
       return m.site_description();
     },
     images: {
-      ogImage: '/chartmini-og.png',
-      logoLight: '/chartmini-logo.svg',
-      logoDark: '/chartmini-logo.svg',
+      ogImage: '/logo.png',
+      logoLight: '/logo.svg',
+      logoDark: '/logo.svg',
     },
   },
   social: {},

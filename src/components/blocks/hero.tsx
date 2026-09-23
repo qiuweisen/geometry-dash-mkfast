@@ -29,14 +29,14 @@ export default function HeroSection() {
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              to="/play"
+              to="/game/geometry-dash-lite"
               className={buttonVariants({ size: 'lg' })}
               aria-label={m.home_hero_primary_aria()}
             >
               {m.home_hero_primary()}
             </Link>
             <Link
-              to="/day-trading-simulator"
+              to="/how-to-play-geometry-dash-lite"
               className={buttonVariants({ variant: 'outline', size: 'lg' })}
               aria-label={m.home_hero_secondary_aria()}
             >

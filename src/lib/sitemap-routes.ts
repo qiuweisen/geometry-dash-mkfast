@@ -1,12 +1,7 @@
 export const SITEMAP_LOCALIZED_ROUTES = [
   '/',
-  '/play',
-  '/day-trading-simulator',
-  '/crypto-trading-simulator',
-  '/forex-trading-simulator',
-  '/intraday-trading-practice',
-  '/market-replay',
-  '/resources',
+  '/game/geometry-dash-lite',
+  '/how-to-play-geometry-dash-lite',
 ] as const;
 
 /**
@@ -20,13 +15,8 @@ export const SITEMAP_ROUTE_LOCALE_PREFIXES: Record<
   readonly string[] | null
 > = {
   '/': null,
-  '/play': null,
-  '/day-trading-simulator': null,
-  '/crypto-trading-simulator': null,
-  '/forex-trading-simulator': null,
-  '/intraday-trading-practice': null,
-  '/market-replay': null,
-  '/resources': ['/', '/zh-hans'],
+  '/game/geometry-dash-lite': null,
+  '/how-to-play-geometry-dash-lite': null,
 };
 
 export const SITEMAP_BASE_LOCALE_ROUTES = [

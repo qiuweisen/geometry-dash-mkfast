@@ -104,7 +104,7 @@ export const Route = createRootRouteWithContext<{
         {
           rel: 'icon',
           type: 'image/svg+xml',
-          href: '/chartmini-favicon.svg',
+          href: '/logo.svg',
         },
         { rel: 'manifest', href: '/manifest.json' },
       ],
