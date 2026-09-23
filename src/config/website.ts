@@ -61,7 +61,7 @@ export const websiteConfig: WebsiteConfig = {
     enableDeleteAccount: true,
   },
   blog: {
-    enable: true,
+    enable: false,
     // Keep the blog grid balanced at three columns on desktop.
     paginationSize: 12,
   },

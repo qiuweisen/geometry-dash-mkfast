@@ -18,7 +18,7 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
           <div className="col-span-full flex flex-col items-start md:col-span-2">
             <Logo className="h-7 w-auto" />
             <p className="py-2 text-base text-muted-foreground md:pr-12">
-              {m.footer_tagline()}
+              {m.site_description()}
             </p>
           </div>
 
@@ -78,7 +78,7 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
       <div className="border-t">
         <Container className="px-4 py-6">
           <p className="text-xs leading-5 text-muted-foreground">
-            {m.footer_risk_disclosure()}
+            {m.site_description()}
           </p>
         </Container>
       </div>
@@ -90,7 +90,7 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
             {m.footer_rights_reserved()}
           </span>
           <span className="text-xs text-muted-foreground">
-            {m.footer_made_for_traders()}
+            {m.home_hero_introduction()}
           </span>
         </Container>
       </div>

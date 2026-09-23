@@ -1,24 +1,19 @@
 import type { MenuItemConfig } from '../types';
 import { m } from '@/locale/paraglide/messages';
 
-/** Original ChartMini public links, grouped for TanStarter's native Footer. */
+/** Public links grouped for TanStarter's native Footer. */
 export function getFooterLinks(): MenuItemConfig[] {
   return [
     {
-      title: m.footer_trading_practice_pages(),
+      title: m.home_hero_primary(),
       items: [
         {
-          title: m.footer_crypto_trading_simulator(),
-          href: '/crypto-trading-simulator',
+          title: m.home_hero_primary(),
+          href: '/game/geometry-dash-lite',
         },
         {
-          title: m.footer_forex_trading_simulator(),
-          href: '/forex-trading-simulator',
-        },
-        { title: m.footer_market_replay(), href: '/market-replay' },
-        {
-          title: m.footer_intraday_practice(),
-          href: '/intraday-trading-practice',
+          title: m.home_hero_secondary(),
+          href: '/how-to-play-geometry-dash-lite',
         },
       ],
     },

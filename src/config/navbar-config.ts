@@ -1,54 +1,35 @@
-import { Routes } from '@/lib/routes';
 import { m } from '@/locale/paraglide/messages';
-import {
-  IconArrowsExchange,
-  IconClock,
-  IconCoinBitcoin,
-  IconHistory,
-} from '@tabler/icons-react';
 import type { MenuItemConfig } from '../types';
 
 /**
- * ChartMini's public navigation. The dropdown keeps the original simulator
- * URLs discoverable while using TanStarter's native NavigationMenu component.
+ * Public navigation for the single-game SEO validation site.
  */
 export function getNavbarLinks(): MenuItemConfig[] {
   return [
     {
-      title: m.nav_simulator(),
+      title: m.home_hero_primary(),
       items: [
         {
-          title: m.nav_market_replay(),
-          href: '/market-replay',
-          icon: IconHistory,
-          external: false,
+          title: m.home_hero_primary(),
+          href: '/game/geometry-dash-lite',
         },
         {
-          title: m.nav_intraday_practice(),
-          href: '/intraday-trading-practice',
-          icon: IconClock,
-          external: false,
-        },
-        {
-          title: m.nav_forex_simulator(),
-          href: '/forex-trading-simulator',
-          icon: IconArrowsExchange,
-          external: false,
-        },
-        {
-          title: m.nav_crypto_simulator(),
-          href: '/crypto-trading-simulator',
-          icon: IconCoinBitcoin,
-          external: false,
+          title: m.home_hero_secondary(),
+          href: '/how-to-play-geometry-dash-lite',
         },
       ],
     },
     {
-      title: m.nav_blog(),
-      href: Routes.Blog,
+      title: m.nav_about_title(),
+      href: '/about',
       external: false,
       baseLocaleOnly: true,
     },
-    { title: m.nav_rewards(), href: '/resources', external: false },
+    {
+      title: m.nav_contact_title(),
+      href: '/contact',
+      external: false,
+      baseLocaleOnly: true,
+    },
   ];
 }

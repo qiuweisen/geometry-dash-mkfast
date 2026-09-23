@@ -27,7 +27,6 @@ import {
   selectableLocales,
 } from '@/lib/locale';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import FeaturedBadgesSection from '@/components/blocks/featured-badges';
 import { lazy, Suspense } from 'react';
 
 // The simulator header is only used by the two interactive simulator routes.
@@ -168,7 +167,6 @@ function RootComponent() {
       <main id="main-content" className="flex-1">
         <Outlet />
       </main>
-      <FeaturedBadgesSection />
       <Footer className="relative z-10 bg-background" />
     </div>
   );

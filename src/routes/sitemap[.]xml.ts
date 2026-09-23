@@ -58,8 +58,7 @@ function urlEntry(
 }
 
 /**
- * ChartMini's production sitemap contract. Keep this list in lockstep with
- * the current site until the DNS cutover has passed the URL/SEO gate.
+ * Public sitemap for the Geometry Dash SEO validation site.
  */
 export const Route = createFileRoute('/sitemap.xml')({
   server: {

@@ -44,13 +44,8 @@ const prerenderLocales = locales.filter((locale) => locale !== 'zh');
 
 const localizedRoutes = [
   '/',
-  '/play',
-  '/day-trading-simulator',
-  '/crypto-trading-simulator',
-  '/forex-trading-simulator',
-  '/intraday-trading-practice',
-  '/market-replay',
-  '/resources',
+  '/game/geometry-dash-lite',
+  '/how-to-play-geometry-dash-lite',
 ];
 
 const baseLocaleOnlyRoutes = [
@@ -65,15 +60,6 @@ function localizeRoute(route, locale) {
   return route === '/' ? `/${locale}` : `/${locale}${route}`;
 }
 
-function localesForRoute(route, availableLocales) {
-  if (route === '/resources') {
-    return availableLocales.filter(
-      (locale) => locale === 'en' || locale === 'zh-hans'
-    );
-  }
-  return availableLocales;
-}
-
 function outputFileForPathname(pathname) {
   if (pathname === '/') return path.join(clientDirectory, 'index.html');
   const relativePath = pathname.replace(/^\/+/, '');
@@ -85,9 +71,7 @@ function outputFileForPathname(pathname) {
 
 const pages = [
   ...localizedRoutes.flatMap((route) =>
-    localesForRoute(route, prerenderLocales).map((locale) =>
-      localizeRoute(route, locale)
-    )
+    prerenderLocales.map((locale) => localizeRoute(route, locale))
   ),
   ...baseLocaleOnlyRoutes,
 ].filter((pathname, index, all) => all.indexOf(pathname) === index);
