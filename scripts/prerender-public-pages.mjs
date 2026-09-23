@@ -40,7 +40,11 @@ const { locales } = JSON.parse(
 
 // `/zh` is a migration-only alias. The Worker must see it so the existing
 // 301 redirect to `/zh-hans` runs before Assets can serve a document.
-const prerenderLocales = locales.filter((locale) => locale !== 'zh');
+// Launch with only the two reviewed translations; other template locales stay
+// available in the source tree until their content is replaced.
+const prerenderLocales = locales.filter((locale) =>
+  ['en', 'zh-hans'].includes(locale)
+);
 
 const localizedRoutes = [
   '/',

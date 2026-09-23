@@ -147,31 +147,11 @@ export const localeConfig = Object.fromEntries(
 // `zh` was introduced by the TanStarter migration, but the existing ChartMini
 // site uses `/zh-hans` for Simplified Chinese. Keep `/zh` routable as a
 // compatibility alias while making `/zh-hans` the only selectable locale.
-const legacyLocaleAliases = new Set<Locale>(['zh']);
+const legacyLocaleAliases = new Set<Locale>();
 
 // Keep the most commonly used languages at the top of every native locale
 // selector. Locales not listed here retain their configured order below them.
-const commonLocaleOrder: Locale[] = [
-  'en',
-  'zh-hans',
-  'zh-hant',
-  'es-419',
-  'pt',
-  'fr',
-  'de',
-  'ja',
-  'ko',
-  'ru',
-  'ar',
-  'hi',
-  'vi',
-  'id',
-  'it',
-  'tr',
-  'nl',
-  'th',
-  'pl',
-];
+const commonLocaleOrder: Locale[] = ['en', 'zh-hans'];
 
 const commonLocalePriority = new Map(
   commonLocaleOrder.map((locale, index) => [locale, index])
@@ -196,7 +176,7 @@ export function getLocalizedLocalesForPath(path: string): Locale[] {
 }
 
 export function getCanonicalLocale(locale: Locale): Locale {
-  return locale === 'zh' ? 'zh-hans' : locale;
+  return locale;
 }
 
 /**
@@ -259,43 +239,6 @@ export function toLegacySupportedLang(locale: string): SupportedLang {
 export const chartMiniLocalePaths = [
   { prefix: '/', hreflang: 'en' },
   { prefix: '/zh-hans', hreflang: 'zh-Hans' },
-  { prefix: '/es-419', hreflang: 'es' },
-  { prefix: '/pt', hreflang: 'pt' },
-  { prefix: '/fr', hreflang: 'fr' },
-  { prefix: '/de', hreflang: 'de' },
-  { prefix: '/ru', hreflang: 'ru' },
-  { prefix: '/ja', hreflang: 'ja' },
-  { prefix: '/ko', hreflang: 'ko' },
-  { prefix: '/zh-hant', hreflang: 'zh-Hant' },
-  { prefix: '/ar', hreflang: 'ar' },
-  { prefix: '/it', hreflang: 'it' },
-  { prefix: '/nl', hreflang: 'nl' },
-  { prefix: '/pl', hreflang: 'pl' },
-  { prefix: '/tr', hreflang: 'tr' },
-  { prefix: '/vi', hreflang: 'vi' },
-  { prefix: '/th', hreflang: 'th' },
-  { prefix: '/id', hreflang: 'id' },
-  { prefix: '/hi', hreflang: 'hi' },
-  { prefix: '/he', hreflang: 'he' },
-  { prefix: '/fa', hreflang: 'fa' },
-  { prefix: '/uk', hreflang: 'uk' },
-  { prefix: '/cs', hreflang: 'cs' },
-  { prefix: '/sv', hreflang: 'sv' },
-  { prefix: '/no', hreflang: 'no' },
-  { prefix: '/da', hreflang: 'da' },
-  { prefix: '/fi', hreflang: 'fi' },
-  { prefix: '/el', hreflang: 'el' },
-  { prefix: '/ro', hreflang: 'ro' },
-  { prefix: '/hu', hreflang: 'hu' },
-  { prefix: '/bg', hreflang: 'bg' },
-  { prefix: '/sk', hreflang: 'sk' },
-  { prefix: '/sl', hreflang: 'sl' },
-  { prefix: '/sr', hreflang: 'sr' },
-  { prefix: '/ms', hreflang: 'ms' },
-  { prefix: '/bn', hreflang: 'bn' },
-  { prefix: '/ur', hreflang: 'ur' },
-  { prefix: '/ta', hreflang: 'ta' },
-  { prefix: '/te', hreflang: 'te' },
 ] as const;
 
 export function parseMessageJson<T>(value: string, fallback: T): T {
