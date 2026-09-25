@@ -24,8 +24,7 @@ export { GeminiKeyPool };
 console.log("[server-entry]: using custom server entry in 'src/server.ts'");
 
 const stagingHosts = new Set([
-  'chartmini-v2.sudotradecom.workers.dev',
-  'v2.chartmini.com',
+  'geometry-dash-mkfast.weisen-qiu.workers.dev',
 ]);
 
 function addStagingRobotsHeader(request: Request, response: Response) {

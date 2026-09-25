@@ -17,8 +17,7 @@ export const Route = createFileRoute('/robots.txt')({
       GET: async ({ request }) => {
         const base = getBaseUrl().replace(/\/$/, '');
         const isStaging = [
-          'chartmini-v2.sudotradecom.workers.dev',
-          'v2.chartmini.com',
+          'geometry-dash-mkfast.weisen-qiu.workers.dev',
         ].includes(new URL(request.url).hostname);
         const robots = isStaging
           ? `User-agent: *

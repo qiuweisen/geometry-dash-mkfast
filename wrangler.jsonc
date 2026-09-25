@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "chartmini-v2",
-  "account_id": "7135c35904ce735df4e1326f317e373d",
+  "name": "geometry-dash-mkfast",
+  "account_id": "8db47976c18bf0ccb6e32d9671daedfb",
   "compatibility_date": "2025-09-02",
   "compatibility_flags": [
     // Enable Node.js API
@@ -32,6 +32,7 @@
   // https://developers.cloudflare.com/workers/wrangler/configuration
   // The path to the entrypoint of your Worker that will be executed
   "main": "./src/server.ts",
+  "workers_dev": true,
 
   // Keep long-form translated marketing content as CDN-served static assets.
   // The ASSETS binding lets server functions read the requested locale without
@@ -149,14 +150,8 @@
     "GEMINI_API_MODEL": "gemma-4-31b-it"
   },
 
-  // Route production traffic through the Worker while the existing Cloudflare
-  // DNS record remains the hostname entry point.
-  "routes": [
-    {
-      "pattern": "chartmini.com/*",
-      "zone_name": "chartmini.com"
-    }
-  ],
+  // Keep custom-domain traffic on the existing Worker until the new build is
+  // verified through its workers.dev staging hostname.
 
   "durable_objects": {
     "bindings": [
@@ -186,8 +181,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "chartmini-v2",
-      "database_id": "a35cdf83-65c8-4427-b2f9-ef7780c1144b",
+      "database_name": "geometry-dash-mkfast",
+      "database_id": "0939c2a0-189b-4033-ac03-be9acec896d2",
       "migrations_dir": "./src/db/migrations"
     }
   ],
@@ -196,7 +191,7 @@
    */
   "r2_buckets": [
     {
-      "bucket_name": "chartmini-v2-files",
+      "bucket_name": "geometry-dash-mkfast-files",
       "binding": "BUCKET"
     }
   ],
@@ -207,7 +202,7 @@
   "kv_namespaces": [
     {
       "binding": "CACHE",
-      "id": "fbdd07934bab44b6b7d356587653b796"
+      "id": "7bdd70f381344c47a765aebc2a1e2b22"
     }
   ]
 }

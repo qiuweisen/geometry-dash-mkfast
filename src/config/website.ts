@@ -55,10 +55,10 @@ export const websiteConfig: WebsiteConfig = {
   },
   social: {},
   auth: {
-    enable: true,
-    enableGoogleLogin: true,
-    enableCredentialLogin: true,
-    enableDeleteAccount: true,
+    enable: false,
+    enableGoogleLogin: false,
+    enableCredentialLogin: false,
+    enableDeleteAccount: false,
   },
   blog: {
     enable: false,
@@ -66,26 +66,20 @@ export const websiteConfig: WebsiteConfig = {
     paginationSize: 12,
   },
   mail: {
-    enable: true,
-    provider: 'resend',
-    fromEmail: 'ChartMini V2 <security@send.chartmini.com>',
-    supportEmail: 'ChartMini Support <security@send.chartmini.com>',
+    enable: false,
   },
   newsletter: {
-    enable: true,
-    provider: 'resend',
-    autoSubscribeAfterSignUp: true,
+    enable: false,
   },
   notification: {
-    enable: import.meta.env.MODE !== 'e2e',
-    provider: 'discord',
+    enable: false,
   },
   cache: {
-    enable: true,
+    enable: false,
     provider: 'kv',
   },
   storage: {
-    enable: true,
+    enable: false,
     provider: 'r2',
     maxFileSize: DEFAULT_MAX_FILE_SIZE,
     allowedTypes: DEFAULT_ALLOWED_TYPES,
