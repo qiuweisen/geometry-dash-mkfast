@@ -62,7 +62,8 @@ export function seo(
 /**
  * Site-level JSON-LD shared by the public marketing pages. Keeping this in a
  * small helper avoids making every route duplicate the same graph and lets
- * staging use its own build-time origin while production uses chartmini.com.
+ * staging uses its own build-time origin while production uses the game site's
+ * canonical domain.
  */
 export function siteStructuredData() {
   const baseUrl = getBaseUrl().replace(/\/$/, '');

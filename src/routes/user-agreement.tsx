@@ -1,13 +1,18 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { UserAgreementPage } from '@/components/marketing/legal-pages';
 import { seo } from '@/lib/seo';
-import { m } from '@/locale/paraglide/messages';
 
 export const Route = createFileRoute('/user-agreement')({
-  head: () =>
-    seo('/user-agreement', {
-      title: m.seo_user_agreement_title(),
-      description: m.seo_user_agreement_description(),
-    }),
+  head: () => {
+    const metadata = seo('/user-agreement', {
+      title: 'User Agreement | Play Geometry Dash',
+      description:
+        'Interim use information for the Play Geometry Dash website and its embedded game.',
+    });
+    return {
+      ...metadata,
+      meta: [...metadata.meta, { name: 'robots', content: 'noindex, follow' }],
+    };
+  },
   component: UserAgreementPage,
 });

@@ -144,9 +144,9 @@ export const localeConfig = Object.fromEntries(
   ])
 ) as Record<Locale, LocaleConfig>;
 
-// `zh` was introduced by the TanStarter migration, but the existing ChartMini
-// site uses `/zh-hans` for Simplified Chinese. Keep `/zh` routable as a
-// compatibility alias while making `/zh-hans` the only selectable locale.
+// `zh` was introduced by the TanStarter migration. Keep `/zh` routable as a
+// compatibility alias while `/zh-hans` is the published Simplified Chinese
+// URL for this site.
 const legacyLocaleAliases = new Set<Locale>();
 
 // Keep the most commonly used languages at the top of every native locale
@@ -158,7 +158,10 @@ const commonLocalePriority = new Map(
 );
 
 export const selectableLocales = locales
-  .filter((locale) => !legacyLocaleAliases.has(locale))
+  .filter(
+    (locale) =>
+      !legacyLocaleAliases.has(locale) && ['en', 'zh-hans'].includes(locale)
+  )
   .sort(
     (left, right) =>
       (commonLocalePriority.get(left) ?? Number.MAX_SAFE_INTEGER) -
@@ -166,13 +169,12 @@ export const selectableLocales = locales
   );
 
 /**
- * Return the locale set that has an actual translated document for a public
- * SEO path. Most sitemap routes are translated for every canonical locale;
- * resources currently has only English and Simplified Chinese content.
+ * Return only locales with a published document for a public SEO path.
+ * Geometry Dash content is currently reviewed in English and Simplified
+ * Chinese; legacy template paths must not advertise untranslated locales.
  */
 export function getLocalizedLocalesForPath(path: string): Locale[] {
-  if (path === '/resources') return ['en', 'zh-hans'];
-  return [...selectableLocales];
+  return LOCALIZED_PATHS.has(path) ? ['en', 'zh-hans'] : ['en'];
 }
 
 export function getCanonicalLocale(locale: Locale): Locale {
@@ -232,9 +234,9 @@ export function toLegacySupportedLang(locale: string): SupportedLang {
 }
 
 /**
- * Public locale prefixes from the current ChartMini site. These are kept
- * separate from the Paraglide locale list so sitemap output and URL
- * compatibility remain explicit and do not invent or remove public URLs.
+ * Public locale prefixes currently published for Geometry Dash. These are
+ * kept separate from Paraglide's retained template locale list so sitemap
+ * output does not invent URLs for untranslated documents.
  */
 export const chartMiniLocalePaths = [
   { prefix: '/', hreflang: 'en' },
@@ -266,22 +268,8 @@ export function getCanonicalPathname(pathname: string) {
  */
 export const LOCALIZED_PATHS = new Set([
   '/',
-  '/ai',
-  '/changelog',
-  '/cookie',
-  '/day-trading-simulator',
-  '/market-replay',
-  '/intraday-trading-practice',
-  '/forex-trading-simulator',
-  '/crypto-trading-simulator',
-  '/resources',
-  '/languages',
-  '/play',
-  '/pricing',
-  '/privacy',
-  '/roadmap',
-  '/terms',
-  '/waitlist',
+  '/game/geometry-dash-lite',
+  '/how-to-play-geometry-dash-lite',
 ]);
 
 /**
@@ -299,22 +287,21 @@ export function isLocalizedPath(path: string): boolean {
  * and remain first-class locale URLs.
  */
 export function getBaseLocaleOnlyRedirectPath(pathname: string): string | null {
-  const localePrefix = chartMiniLocalePaths
-    .map(({ prefix }) => prefix)
-    .filter((prefix) => prefix !== '/')
-    .find((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+  const localePrefixes = locales
+    .filter((locale) => locale !== baseLocale)
+    .map((locale) => `/${locale}`);
+  const localePrefix = localePrefixes.find(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
 
   if (!localePrefix) return null;
 
   const basePathname = pathname.slice(localePrefix.length) || '/';
   const normalizedBasePathname = basePathname.replace(/\/+$/, '') || '/';
 
-  // Resources has a real `/zh-hans` document, but the other locale prefixes
-  // currently resolve to English fallback content and must not be indexable as
-  // translated pages.
-  if (normalizedBasePathname === '/resources') {
-    return localePrefix === '/zh-hans' ? null : '/resources';
-  }
+  if (localePrefix !== '/zh-hans') return normalizedBasePathname;
 
-  return isBaseLocaleOnlyPath(basePathname) ? basePathname : null;
+  return isBaseLocaleOnlyPath(normalizedBasePathname)
+    ? normalizedBasePathname
+    : null;
 }

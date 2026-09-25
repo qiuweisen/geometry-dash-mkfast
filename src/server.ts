@@ -11,6 +11,7 @@ import {
 } from '@/lib/locale';
 import {
   isBaseLocaleOnlyPath,
+  isSearchIndexablePath,
   SITEMAP_LOCALIZED_ROUTES,
 } from '@/lib/sitemap-routes';
 
@@ -23,9 +24,7 @@ export { GeminiKeyPool };
  */
 console.log("[server-entry]: using custom server entry in 'src/server.ts'");
 
-const stagingHosts = new Set([
-  'geometry-dash-mkfast.weisen-qiu.workers.dev',
-]);
+const stagingHosts = new Set(['geometry-dash-mkfast.weisen-qiu.workers.dev']);
 
 function addStagingRobotsHeader(request: Request, response: Response) {
   if (!stagingHosts.has(new URL(request.url).hostname)) {
@@ -57,6 +56,22 @@ function addStagingRobotsHeader(request: Request, response: Response) {
   });
 }
 
+function addPublicIndexPolicy(request: Request, response: Response) {
+  const contentType = response.headers.get('Content-Type') ?? '';
+  if (!contentType.includes('text/html')) return response;
+
+  const { pathname } = new URL(request.url);
+  if (isSearchIndexablePath(pathname)) return response;
+
+  const headers = new Headers(response.headers);
+  headers.set('X-Robots-Tag', 'noindex, follow');
+  return new Response(response.body, {
+    headers,
+    status: response.status,
+    statusText: response.statusText,
+  });
+}
+
 function addStaticAssetCacheHeaders(request: Request, response: Response) {
   if (!response.ok) return response;
 
@@ -69,8 +84,7 @@ function addStaticAssetCacheHeaders(request: Request, response: Response) {
     pathname.startsWith('/images/') ||
     pathname.startsWith('/fonts/') ||
     pathname.startsWith('/TradingView/') ||
-    pathname.startsWith('/badges/') ||
-    pathname === '/chartmini-favicon.svg';
+    pathname.startsWith('/badges/');
 
   if (!isHashedClientAsset && !isStableStaticAsset) {
     return response;
@@ -375,6 +389,7 @@ export default {
           })
         )
           .then((response) => addStagingRobotsHeader(request, response))
+          .then((response) => addPublicIndexPolicy(request, response))
           .then((response) => addStaticAssetCacheHeaders(request, response))
       )
     );

@@ -40,12 +40,12 @@ export function DashboardSidebar({ user, ...props }: DashboardSidebarProps) {
               render={
                 <Link
                   to={Routes.Root}
-                  aria-label="ChartMini"
+                  aria-label="Play Geometry Dash"
                   onClick={closeMobileSidebar}
                 >
                   <Logo className="!h-8 !w-auto group-data-[collapsible=icon]:hidden" />
                   <img
-                    src="/chartmini-favicon.svg"
+                    src="/logo.svg"
                     alt=""
                     aria-hidden="true"
                     width={24}

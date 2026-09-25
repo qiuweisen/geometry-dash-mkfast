@@ -6,6 +6,7 @@ import {
   isLocalizedPath,
 } from '@/lib/locale';
 import {
+  isSearchIndexablePath,
   SITEMAP_BASE_LOCALE_ROUTES,
   SITEMAP_LOCALIZED_ROUTES,
 } from '@/lib/sitemap-routes';
@@ -14,7 +15,7 @@ describe('SEO URL redirects', () => {
   it('does not add a redirect for non-English blog URLs', () => {
     const response = getChartMiniLegacyRedirect(
       new Request(
-        'https://chartmini.com/cs/blog/triple-ema-tradingview-tutorial?ref=gsc'
+        'https://play-geometry-dash.com/cs/blog/triple-ema-tradingview-tutorial?ref=gsc'
       )
     );
 
@@ -24,7 +25,7 @@ describe('SEO URL redirects', () => {
   it('does not convert the legacy zh blog alias into a 301', () => {
     const response = getChartMiniLegacyRedirect(
       new Request(
-        'https://chartmini.com/zh/blog/triple-ema-tradingview-tutorial'
+        'https://play-geometry-dash.com/zh/blog/triple-ema-tradingview-tutorial'
       )
     );
 
@@ -33,18 +34,20 @@ describe('SEO URL redirects', () => {
 
   it('redirects source route-group paths to public paths', () => {
     const response = getChartMiniLegacyRedirect(
-      new Request('https://chartmini.com/(pages)/contact')
+      new Request('https://play-geometry-dash.com/(pages)/contact')
     );
 
     expect(response?.status).toBe(301);
     expect(response?.headers.get('location')).toBe(
-      'https://chartmini.com/contact'
+      'https://play-geometry-dash.com/contact'
     );
   });
 
   it('leaves the English canonical blog URL alone', () => {
     const response = getChartMiniLegacyRedirect(
-      new Request('https://chartmini.com/blog/triple-ema-tradingview-tutorial')
+      new Request(
+        'https://play-geometry-dash.com/blog/triple-ema-tradingview-tutorial'
+      )
     );
 
     expect(response).toBeNull();
@@ -74,15 +77,55 @@ describe('SEO sitemap locale contract', () => {
     );
     expect(getBaseLocaleOnlyRedirectPath('/de/resources')).toBe('/resources');
     expect(getBaseLocaleOnlyRedirectPath('/de/resources/')).toBe('/resources');
-    expect(getBaseLocaleOnlyRedirectPath('/zh-hans/resources')).toBeNull();
+    expect(getBaseLocaleOnlyRedirectPath('/zh-hans/resources')).toBe(
+      '/resources'
+    );
+    expect(getBaseLocaleOnlyRedirectPath('/fr/crypto-trading-simulator')).toBe(
+      '/crypto-trading-simulator'
+    );
+    expect(getBaseLocaleOnlyRedirectPath('/fr')).toBe('/');
+    expect(getBaseLocaleOnlyRedirectPath('/fr/game/geometry-dash-lite')).toBe(
+      '/game/geometry-dash-lite'
+    );
     expect(
-      getBaseLocaleOnlyRedirectPath('/fr/crypto-trading-simulator')
+      getBaseLocaleOnlyRedirectPath('/zh-hans/game/geometry-dash-lite')
     ).toBeNull();
     expect(getBaseLocaleOnlyRedirectPath('/blog/example-post')).toBeNull();
   });
 
-  it('limits resource hreflang to locales with translated content', () => {
-    expect(getLocalizedLocalesForPath('/resources')).toEqual(['en', 'zh-hans']);
-    expect(getLocalizedLocalesForPath('/market-replay')).toContain('de');
+  it('keeps only published game pages in localized sitemap clusters', () => {
+    expect(SITEMAP_LOCALIZED_ROUTES).toEqual([
+      '/',
+      '/game/geometry-dash-lite',
+      '/how-to-play-geometry-dash-lite',
+    ]);
+    expect(SITEMAP_LOCALIZED_ROUTES.every(isLocalizedPath)).toBe(true);
+  });
+
+  it('marks only published English and Simplified Chinese HTML URLs indexable', () => {
+    for (const route of SITEMAP_LOCALIZED_ROUTES) {
+      expect(isSearchIndexablePath(route)).toBe(true);
+      expect(
+        isSearchIndexablePath(route === '/' ? '/zh-hans' : `/zh-hans${route}`)
+      ).toBe(true);
+    }
+    for (const path of [
+      '/about',
+      '/contact',
+      '/blog',
+      '/resources',
+      '/market-replay',
+      '/fr/game/geometry-dash-lite',
+      '/privacy-policy',
+    ]) {
+      expect(isSearchIndexablePath(path)).toBe(false);
+    }
+  });
+
+  it('limits Geometry Dash hreflang to published English and Simplified Chinese pages', () => {
+    for (const route of SITEMAP_LOCALIZED_ROUTES) {
+      expect(getLocalizedLocalesForPath(route)).toEqual(['en', 'zh-hans']);
+    }
+    expect(getLocalizedLocalesForPath('/market-replay')).toEqual(['en']);
   });
 });
